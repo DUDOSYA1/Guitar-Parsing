@@ -21,7 +21,7 @@ def init_db():
             manufacturer TEXT,
             country TEXT,
             condition TEXT,
-            price TEXT,
+            price INTEGER,
             rating TEXT,
             website TEXT,
             url TEXT,
@@ -42,25 +42,23 @@ def get_driver():
     return driver
 
 
-def parse_page():
+def parse_page(timesToClick):
     driver = get_driver()
     url = "https://www.thomannmusic.com/all-products-from-the-category-electric-guitars.html"
     driver.get(url)
 
     wait = WebDriverWait(driver, 10)
 
-    # Пример нажатия кнопки "Show more" 2 раза для подгрузки данных
-    for _ in range(2):
+    for _ in range(timesToClick):
         try:
             show_more_btn = wait.until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, "button.search-pagination__show-more")))
             driver.execute_script("arguments[0].click();", show_more_btn)
-            time.sleep(2)  # Ожидание подгрузки
+            time.sleep(2)
         except Exception as e:
             print("Кнопка больше не доступна или ошибка:", e)
             break
 
-    # Передаем полностью загруженный HTML в BeautifulSoup
     soup = BeautifulSoup(driver.page_source, 'html.parser')
     driver.quit()
 
@@ -73,19 +71,20 @@ def parse_page():
             manufacturer = item.select_one('.title__manufacturer').text.strip() if item.select_one('.title__manufacturer') else "N/A"
             model = item.select_one('.title__name').text.strip() if item.select_one('.title__name') else "N/A"
 
-            # Определение состояния (на Thomann B-Stock указывает на БУ/уценку)
             condition = "Used (B-Stock)" if "B-Stock" in model or "B-Stock" in item.get_text() else "New"
 
-            price = item.select_one('.fx-typography-price-primary fx-price-group__primary product__price-primary').text.strip() if item.select_one(
-                '.fx-typography-price-primary fx-price-group__primary product__price-primary') else "N/A"
+            price_elem = item.select_one('.product__price-primary')
 
-            rating_elem = item.select_one('.fx-rating-stars__stars')
-            rating = rating_elem.get('aria-label') if rating_elem else "No rating"
+            if price_elem:
+                price = int(price_elem.text.strip().replace('$', '').replace(',', ''))
+            else:
+                price = "N/A"
 
-            link_elem = item.select_one('a.product-listings-info__direct-link')
-            link = "https://www.thomannmusic.com" + link_elem['href'] if link_elem else "N/A"
+            rating = "No rating"
 
-            # Страна часто не указана в листинге, на Thomann это обычно требует захода в карточку товара
+            link_elem = item.select_one('.product__content.no-underline')
+            link = "https://www.thomannmusic.com/" + link_elem['href'] if link_elem else "N/A"
+
             country = "Not specified"
 
             cursor.execute('''
@@ -102,5 +101,4 @@ def parse_page():
     print(f"Успешно сохранено {len(items)} товаров в БД.")
 
 
-if __name__ == "__main__":
-    parse_page()
+parse_page(3)
