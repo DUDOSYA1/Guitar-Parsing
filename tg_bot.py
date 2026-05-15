@@ -61,7 +61,7 @@ if cursor.fetchone()[0] == 0:
         ''', (model, brand, country, condition, price, rating, random.choice(sites), f"https://example.com/{i}", datetime.now().strftime("%Y-%m-%d"), desc))
     
     conn.commit()
-    print("✅ Добавлено 100 гитар")
+    print("Добавлено 100 гитар")
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await update.message.reply_text(
@@ -95,18 +95,20 @@ async def search(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(f"Ничего не найдено: {query}")
         return
     
-    # Создаем CSV файл
     output = StringIO()
-    writer = csv.writer(output)
-    writer.writerow(["Модель", "Бренд", "Страна", "Состояние", "Цена", "Рейтинг", "Сайт", "Ссылка"])
-    writer.writerows(results)
+    writer = csv.writer(output, quoting=csv.QUOTE_ALL, delimiter=';')
+    
+    writer.writerow(["№", "Модель", "Бренд", "Страна", "Состояние", "Цена (₽)", "Рейтинг", "Сайт", "Ссылка"])
+    
+    for i, row in enumerate(results, 1):
+        writer.writerow([i, row[0], row[1], row[2], row[3], row[4], row[5], row[6], row[7]])
     
     csv_bytes = BytesIO(output.getvalue().encode('utf-8-sig'))
     
     await update.message.reply_document(
         document=csv_bytes,
         filename=f"guitars_{query}.csv",
-        caption=f"🎸 Найдено: {len(results)} гитар"
+        caption=f"Найдено: {len(results)} гитар\nРазделитель: точка с запятой (;)"
     )
 
 async def top_price(update: Update, context: ContextTypes.DEFAULT_TYPE):
