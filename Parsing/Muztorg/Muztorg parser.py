@@ -7,7 +7,31 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
-	@@ -35,73 +35,144 @@ def init_db():
+from selenium.webdriver.support import expected_conditions as EC
+from fake_useragent import UserAgent
+
+
+def init_db():
+    conn = sqlite3.connect('muztorg_guitars.db')
+    cursor = conn.cursor()
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS guitars (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            model TEXT,
+            manufacturer TEXT,
+            country TEXT,
+            condition TEXT,
+            price INTEGER,
+            rating TEXT,
+            website TEXT,
+            url TEXT,
+            parsing_date TEXT
+        )
+    ''')
+    conn.commit()
+    return conn
+
+
 def get_driver():
     ua = UserAgent()
     options = Options()
