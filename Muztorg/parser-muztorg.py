@@ -1,9 +1,9 @@
 import time
 import sqlite3
+import re
 from datetime import datetime
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
@@ -35,73 +35,144 @@ def init_db():
 def get_driver():
     ua = UserAgent()
     options = Options()
-    # options.add_argument("--headless") # Раскомментируйте для работы в фоновом режиме
+    # Безголовый режим для скорости
+    options.add_argument("--headless=new")
     options.add_argument(f"user-agent={ua.random}")
-    # Укажите путь к вашему chromedriver, если он не в PATH
+    options.add_argument("--disable-images")
+    options.add_experimental_option("excludeSwitches", ["enable-logging"])
     driver = webdriver.Chrome(options=options)
     return driver
 
 
-def parse_page(timesToClick):
-    driver = get_driver()
-    url = "https://www.muztorg.ru/category/elektrogitary"
+def clean_price(price_text):
+    match = re.search(r'(\d+[\s\xa0]*\d+)', price_text)
+    if match:
+        cleaned = re.sub(r'[\s\xa0]', '', match.group(1))
+        return int(cleaned)
+    return "N/A"
+
+
+def clean_manufacturer(text):
+    if not text:
+        return "N/A"
+    cleaned = text.replace('Электрогитара', '').strip()
+    return cleaned if cleaned else "N/A"
+
+
+def clean_model(text):
+    if not text:
+        return "N/A"
+    cleaned = text.replace('Электрогитара', '').strip()
+    cleaned = re.sub(r'\s+', ' ', cleaned)
+    return cleaned if cleaned else "N/A"
+
+
+def clean_rating(text):
+    if not text:
+        return "No rating"
+    match = re.search(r'(\d+\.\d+)', text)
+    return match.group(1) if match else "No rating"
+
+
+def parse_page(driver, url):
+    """Парсит одну страницу по URL"""
     driver.get(url)
-
-    wait = WebDriverWait(driver, 10)
-
-    for _ in range(timesToClick):
-        try:
-            # Оставлю старый селектор, но если не сработает — нужно будет посмотреть реальную кнопку на сайте
-            show_more_btn = wait.until(
-                EC.element_to_be_clickable((By.CSS_SELECTOR, "button.load-more")))
-            driver.execute_script("arguments[0].click();", show_more_btn)
-            time.sleep(2)
-        except Exception as e:
-            print("Кнопка больше не доступна или ошибка:", e)
-            break
-
+    time.sleep(3)  # Ждём загрузки
+    
     soup = BeautifulSoup(driver.page_source, 'html.parser')
-    driver.quit()
-
-    # Селекторы ВАШИХ скриншотов
     items = soup.select('article.catalog-card.js-catalog-card')
-    conn = init_db()
-    cursor = conn.cursor()
-
+    
+    if not items:
+        print(f"  → Товары не найдены на {url}")
+        return []
+    
+    page_items = []
     for item in items:
         try:
-            # Из ваших скриншотов: производитель может быть в catalog-card_category
-            manufacturer = item.select_one('.catalog-card_category').text.strip() if item.select_one('.catalog-card_category') else "N/A"
-            model = item.select_one('.catalog-card_name').text.strip() if item.select_one('.catalog-card_name') else "N/A"
-
+            raw_manufacturer = item.select_one('.catalog-card__category')
+            manufacturer = clean_manufacturer(raw_manufacturer.text.strip() if raw_manufacturer else "")
+            
+            raw_model = item.select_one('.catalog-card__info')
+            model = clean_model(raw_model.text.strip() if raw_model else "")
+            
+            # Убираем дублирование производителя в модели
+            if manufacturer != "N/A" and model.startswith(manufacturer):
+                model = model[len(manufacturer):].lstrip()
+            elif manufacturer == "N/A" and model != "N/A":
+                parts = model.split()
+                if parts:
+                    manufacturer = parts[0]
+                    if model.startswith(manufacturer):
+                        model = model[len(manufacturer):].lstrip()
+            
             condition = "Used (B-Stock)" if "B-Stock" in model or "б/у" in item.get_text().lower() else "New"
-
-            # Цена из блока catalog-card_price-block
-            price_elem = item.select_one('.catalog-card_price-block div:first-child')
-            if price_elem:
-                price = int(price_elem.text.strip().replace('₽', '').replace(' ', '').replace(',', ''))
+            
+            price_elem = item.select_one('.catalog-card__price')
+            price = clean_price(price_elem.text.strip()) if price_elem else "N/A"
+            
+            rating_elem = item.select_one('.catalog-card__misc')
+            rating = clean_rating(rating_elem.text.strip() if rating_elem else "")
+            
+            link_elem = item.select_one('a.catalog-card__link')
+            if link_elem and link_elem.get('href'):
+                href = link_elem['href']
+                link = f"https://www.muztorg.ru{href}" if href.startswith('/') else href
             else:
-                price = "N/A"
-
-            rating = "No rating"
-
-            link_elem = item.select_one('a.catalog-card_link')
-            link = "https://www.muztorg.ru" + link_elem['href'] if link_elem else "N/A"
-
-            country = "Not specified"
-
-            cursor.execute('''
-                INSERT INTO guitars (model, manufacturer, country, condition, price, rating, website, url, parsing_date)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-            ''', (model, manufacturer, country, condition, price, rating, "Muztorg", link,
-                  datetime.now().strftime("%Y-%m-%d %H:%M:%S")))
-
+                link = "N/A"
+            
+            if price != "N/A" and model != "N/A":
+                page_items.append({
+                    'model': model, 'manufacturer': manufacturer, 'country': "Not specified",
+                    'condition': condition, 'price': price, 'rating': rating,
+                    'website': "Muztorg", 'url': link,
+                    'parsing_date': datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                })
         except Exception as e:
-            print(f"Ошибка при обработке товара: {e}")
-
-    conn.commit()
-    conn.close()
-    print(f"Успешно сохранено {len(items)} товаров в БД.")
+            print(f"  Ошибка обработки товара: {e}")
+    
+    return page_items
 
 
-parse_page(3)
+def parse_all_pages(start_page=1, max_pages=10):
+    """Парсит все страницы через параметр ?page=N"""
+    driver = get_driver()
+    conn = init_db()
+    cursor = conn.cursor()
+    total_items = 0
+    
+    try:
+        for page in range(start_page, start_page + max_pages):
+            url = f"https://www.muztorg.ru/category/elektrogitary?page={page}"
+            print(f"\n📄 Страница {page}: {url}")
+            
+            items = parse_page(driver, url)
+            
+            if not items:
+                print(f"  → На странице {page} нет товаров. Возможно, это конец.")
+                break
+            
+            for item in items:
+                cursor.execute('''
+                    INSERT INTO guitars (model, manufacturer, country, condition, price, rating, website, url, parsing_date)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                ''', (item['model'], item['manufacturer'], item['country'], 
+                      item['condition'], item['price'], item['rating'], 
+                      item['website'], item['url'], item['parsing_date']))
+            
+            conn.commit()
+            total_items += len(items)
+            print(f"  ✅ Сохранено {len(items)} товаров (всего: {total_items})")
+            
+            # Небольшая задержка между страницами
+            time.sleep(1)
+            
+    finally:
+        driver.quit()
+        conn.close()
+    
+    print(f"\n🎉 Готово! Всего сохранено {total_items} товаров с {page} страниц.")
+
+
+if __name__ == "__main__":
+    # Парсим первые 10 страниц (можно увеличить)
+    parse_all_pages(start_page=1, max_pages=10)
