@@ -1,97 +1,216 @@
 import re
 import pandas as pd
+
 from unidecode import unidecode
-from rapidfuzz import fuzz, process
-from deep_translator import GoogleTranslator
 
 
 class GuitarNormalizer:
+
     def __init__(self):
-        self.tr = GoogleTranslator(source="auto", target="en")
+
+        self.empty_values = {
+            "",
+            " ",
+            "na",
+            "n/a",
+            "none",
+            "null",
+            "not specified",
+            "-",
+            "--"
+        }
 
     # ---------------- CLEAN ----------------
-    def clean(self, x):
-        if not x:
-            return ""
-        x = unidecode(str(x))
-        x = x.lower().strip()
-        x = re.sub(r"\s+", " ", x)
-        return x
 
-    # ---------------- TRANSLATE ----------------
-    def translate(self, x):
-        x = self.clean(x)
-        BRAND_MAP = {
-            "fender": "Fender",
-            "gibson": "Gibson",
-            "epiphone": "Epiphone",
-            "harley benton": "Harley Benton",
-            "squier": "Squier",
-            "prs": "PRS"
+    def clean_text(self, value):
+
+        if pd.isna(value):
+            return "N/A"
+
+        value = str(value).strip()
+
+        if value.lower() in self.empty_values:
+            return "N/A"
+
+        value = unidecode(value)
+
+        value = re.sub(r"\s+", " ", value)
+
+        if value == "":
+            return "N/A"
+
+        return value
+
+    # ---------------- PRICE ----------------
+
+    def clean_price(self, value):
+
+        if pd.isna(value):
+            return "N/A"
+
+        value = str(value)
+
+        if value.lower().strip() in self.empty_values:
+            return "N/A"
+
+        value = re.sub(r"[^0-9.,]", "", value)
+
+        value = value.replace(",", ".")
+
+        try:
+            return float(value)
+        except:
+            return "N/A"
+
+    # ---------------- RATING ----------------
+
+    def clean_rating(self, value):
+
+        if pd.isna(value):
+            return "N/A"
+
+        value = str(value).strip()
+
+        if value.lower() in self.empty_values:
+            return "N/A"
+
+        try:
+            return round(float(value), 2)
+        except:
+            return "N/A"
+
+    # ---------------- CONDITION ----------------
+
+    def normalize_condition(self, value):
+
+        value = self.clean_text(value)
+
+        if value == "N/A":
+            return "N/A"
+
+        value_lower = value.lower()
+
+        used_words = [
+            "used",
+            "second hand",
+            "бу",
+            "b-stock"
+        ]
+
+        for word in used_words:
+            if word in value_lower:
+                return "БУ"
+
+        return "Новая"
+
+    # ---------------- COLUMN NORMALIZATION ----------------
+
+    def normalize_columns(self, df: pd.DataFrame):
+
+        column_mapping = {
+            "model": "Модель гитары",
+            "manufacturer": "Производитель",
+            "brand": "Производитель",
+            "country": "Страна производства",
+            "condition": "Состояние",
+            "price": "Цена",
+            "rating": "Рейтинг",
+            "website": "Сайт",
+            "url": "Ссылка",
+            "link": "Ссылка",
+            "parsing_date": "Дата парсинга",
+            "date": "Дата парсинга"
         }
-        return BRAND_MAP.get(x, x.title())
 
-    # ---------------- MODEL NORMALIZATION ----------------
-    def normalize_model(self, model):
-        model = self.clean(model)
+        normalized = {}
 
-        # убираем мусор
-        stop = {
-            "electric", "acoustic", "guitar",
-            "left", "right", "hand", "edition",
-            "series", "standard", "pro", "deluxe"
-        }
+        for column in df.columns:
 
-        words = [w for w in model.split() if w not in stop]
+            column_lower = column.lower()
 
-        # сортировка = убираем разный порядок слов
-        words = sorted(words)
+            if column_lower in column_mapping:
+                normalized[column] = column_mapping[column_lower]
 
-        return " ".join(words)
+        df = df.rename(columns=normalized)
 
-    # ---------------- FUZZY DEDUP ----------------
-    def deduplicate(self, df):
-        unique = []
-        mapping = {}
-
-        for m in df["model_norm"]:
-            match = process.extractOne(m, unique, scorer=fuzz.ratio)
-
-            if match and match[1] > 90:
-                mapping[m] = match[0]
-            else:
-                unique.append(m)
-                mapping[m] = m
-
-        df["model_group"] = df["model_norm"].map(mapping)
         return df
 
-    # ---------------- MAIN PIPELINE ----------------
-    def run(self, df):
+    # ---------------- REQUIRED COLUMNS ----------------
 
-        df["model_norm"] = df["model"].apply(self.normalize_model)
+    def ensure_columns(self, df: pd.DataFrame):
 
-        df["manufacturer_en"] = df["manufacturer"].apply(self.translate)
-        df["country_en"] = df["country"].apply(self.translate)
-        df["condition_en"] = df["condition"].apply(self.translate)
+        required_columns = [
+            "Модель гитары",
+            "Производитель",
+            "Страна производства",
+            "Состояние",
+            "Цена",
+            "Рейтинг",
+            "Сайт",
+            "Ссылка",
+            "Дата парсинга"
+        ]
 
-        df["website"] = df["website"].apply(self.clean)
+        for column in required_columns:
 
-        df["price"] = pd.to_numeric(df["price"], errors="coerce")
-        df["rating"] = pd.to_numeric(df["rating"], errors="coerce")
+            if column not in df.columns:
+                df[column] = "N/A"
 
-        df = self.deduplicate(df)
+        return df[required_columns]
 
-        result = df.sort_values("price").groupby("model_group").agg({
-            "model": "first",
-            "manufacturer_en": "first",
-            "country_en": "first",
-            "condition_en": "first",
-            "price": "min",
-            "rating": "mean",
-            "website": "first",
-            "url": "first",
-            "parsing_date": "max"
-        }).reset_index(drop=True)
+    # ---------------- MAIN ----------------
 
-        return result
+    def run(self, df: pd.DataFrame):
+
+        df = self.normalize_columns(df)
+
+        df = self.ensure_columns(df)
+
+        df["Модель гитары"] = df[
+            "Модель гитары"
+        ].apply(self.clean_text)
+
+        df["Производитель"] = df[
+            "Производитель"
+        ].apply(self.clean_text)
+
+        df["Страна производства"] = df[
+            "Страна производства"
+        ].apply(self.clean_text)
+
+        df["Состояние"] = df[
+            "Состояние"
+        ].apply(self.normalize_condition)
+
+        df["Цена"] = df[
+            "Цена"
+        ].apply(self.clean_price)
+
+        df["Рейтинг"] = df[
+            "Рейтинг"
+        ].apply(self.clean_rating)
+
+        df["Сайт"] = df[
+            "Сайт"
+        ].apply(self.clean_text)
+
+        df["Ссылка"] = df[
+            "Ссылка"
+        ].apply(self.clean_text)
+
+        df["Дата парсинга"] = df[
+            "Дата парсинга"
+        ].apply(self.clean_text)
+
+        # Удаляем полные дубликаты
+        df = df.drop_duplicates()
+
+        # Сортировка по цене
+        if "Цена" in df.columns:
+            df = df.sort_values(
+                by="Цена",
+                ascending=True,
+                na_position="last"
+            )
+
+        return df

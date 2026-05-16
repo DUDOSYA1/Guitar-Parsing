@@ -4,10 +4,17 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="01146d41-76b5-4658-b610-8f730d9dddb8" name="Changes" comment="Готовый парсер">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="01146d41-76b5-4658-b610-8f730d9dddb8" name="Changes" comment="Все БД теперь в одной нормализованной">
+      <change afterPath="$PROJECT_DIR$/normalized_guitars.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Parsing/Skifmusic/Skifmusic parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Skifmusic/Skifmusic parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Thomann/thomann_guitars.db" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Thomann/thomann_guitars.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Гитары парсинг.docx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/muztorg_guitars.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/normalizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/normalizer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/popmusic_guitars.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/skifmusic_guitars.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/thomann_guitars.db" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,14 +44,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Skifmusic&quot;,
-    &quot;last_opened_file_path&quot;: &quot;D:/Проекты/GuitarParsing&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "D:/Проекты/GuitarParsing"
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -81,11 +88,23 @@
     <option name="localTasksCounter" value="4" />
     <servers />
   </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="First Thomann commit" />
     <MESSAGE value="Рабочий тест" />
     <MESSAGE value="Готовый парсер" />
     <MESSAGE value="Первый коммит - создание" />
-    <option name="LAST_COMMIT_MESSAGE" value="Первый коммит - создание" />
+    <MESSAGE value="Все БД теперь в одной нормализованной" />
+    <option name="LAST_COMMIT_MESSAGE" value="Все БД теперь в одной нормализованной" />
   </component>
 </project>
