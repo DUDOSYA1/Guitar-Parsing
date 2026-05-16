@@ -1,3 +1,5 @@
+import sys
+
 import requests
 import sqlite3
 import time as t
@@ -9,9 +11,40 @@ from fake_useragent import UserAgent
 
 BASE_URL = "https://pop-music.ru"
 
+from pathlib import Path
+
+
+# ------------------------------------------------
+# DB PATH
+# ------------------------------------------------
+
+if len(sys.argv) < 2:
+    raise Exception(
+        "Database path not provided"
+    )
+
+db_path = Path(sys.argv[1]).resolve()
+
+print(f"[DB PATH] {db_path}")
+
+# Создаем папку если нет
+db_path.parent.mkdir(
+    parents=True,
+    exist_ok=True
+)
+
+import sys
+
+sys.stdout.reconfigure(
+    encoding="utf-8"
+)
+
+sys.stderr.reconfigure(
+    encoding="utf-8"
+)
 
 def init_db():
-    conn = sqlite3.connect('popmusic_guitars.db')
+    conn = sqlite3.connect(str(db_path))
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS guitars (

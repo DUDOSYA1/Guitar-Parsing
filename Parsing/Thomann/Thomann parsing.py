@@ -1,3 +1,4 @@
+import sys
 import time
 import sqlite3
 from datetime import datetime
@@ -10,9 +11,30 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from fake_useragent import UserAgent
 
+from pathlib import Path
+
+
+# ------------------------------------------------
+# DB PATH
+# ------------------------------------------------
+
+if len(sys.argv) < 2:
+    raise Exception(
+        "Database path not provided"
+    )
+
+db_path = Path(sys.argv[1]).resolve()
+
+print(f"[DB PATH] {db_path}")
+
+# Создаем папку если нет
+db_path.parent.mkdir(
+    parents=True,
+    exist_ok=True
+)
 
 def init_db():
-    conn = sqlite3.connect('thomann_guitars.db')
+    conn = sqlite3.connect(str(db_path))
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS guitars (

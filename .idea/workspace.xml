@@ -5,16 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="01146d41-76b5-4658-b610-8f730d9dddb8" name="Changes" comment="Все БД теперь в одной нормализованной">
-      <change afterPath="$PROJECT_DIR$/normalized_guitars.db" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/update.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Parsing/Thomann/thomann_guitars.db" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Thomann/thomann_guitars.db" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Parsing/Гитары парсинг.docx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/muztorg_guitars.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/normalizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/normalizer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/popmusic_guitars.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/skifmusic_guitars.db" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/thomann_guitars.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Muztorg/Muztorg parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Muztorg/Muztorg parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Muztorg/muztorg_guitars.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Pop-music/Pop-music parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Pop-music/Pop-music parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Pop-music/popmusic_guitars.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Skifmusic/Skifmusic parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Skifmusic/Skifmusic parser.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Skifmusic/skifmusic_guitars.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Thomann/Thomann parsing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Thomann/Thomann parsing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Thomann/thomann_guitars.db" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/normalized_guitars.db" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -85,7 +86,15 @@
       <option name="project" value="LOCAL" />
       <updated>1777558744517</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Все БД теперь в одной нормализованной">
+      <option name="closed" value="true" />
+      <created>1778917413441</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1778917413441</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
