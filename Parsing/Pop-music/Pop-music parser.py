@@ -201,5 +201,5 @@ def parse_page(pages_count):
     print("\nГотово! База данных обновлена.")
 
 
-if __name__ == "__main__":
-    parse_page(2)
+#if __name__ == "__main__":
+#    parse_page(2)

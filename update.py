@@ -190,7 +190,18 @@ def clear_normalized_db():
 
         try:
 
-            os.remove(NORMALIZED_DB)
+            conn = sqlite3.connect(
+                NORMALIZED_DB
+            )
+
+            cursor = conn.cursor()
+
+            cursor.execute(
+                "DELETE FROM guitars"
+            )
+
+            conn.commit()
+            conn.close()
 
             logger.info(
                 f"[REMOVED] {NORMALIZED_DB}"

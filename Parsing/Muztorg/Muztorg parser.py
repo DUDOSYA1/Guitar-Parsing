@@ -195,6 +195,6 @@ def parse_all_pages(start_page=1, max_pages=10):
     print(f"\n🎉 Готово! Всего сохранено {total_items} товаров с {page} страниц.")
 
 
-if __name__ == "__main__":
+#if __name__ == "__main__":
     # Парсим первые 10 страниц (можно увеличить)
-    parse_all_pages(start_page=1, max_pages=2)
+    #parse_all_pages(start_page=1, max_pages=2)
