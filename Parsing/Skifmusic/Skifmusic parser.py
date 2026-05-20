@@ -12,9 +12,6 @@ from fake_useragent import UserAgent
 from pathlib import Path
 
 
-# ------------------------------------------------
-# DB PATH
-# ------------------------------------------------
 
 if len(sys.argv) < 2:
     raise Exception(
@@ -25,7 +22,6 @@ db_path = Path(sys.argv[1]).resolve()
 
 print(f"[DB PATH] {db_path}")
 
-# Создаем папку если нет
 db_path.parent.mkdir(
     parents=True,
     exist_ok=True
@@ -114,7 +110,6 @@ def parse_brand_and_model(title):
             model_start_index = i
             break
 
-    # если модель не найдена
     if model_start_index is None:
 
         if len(parts) == 1:

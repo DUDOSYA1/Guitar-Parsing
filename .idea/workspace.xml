@@ -4,18 +4,22 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="01146d41-76b5-4658-b610-8f730d9dddb8" name="Changes" comment="Парсинг по расписанию">
-      <change afterPath="$PROJECT_DIR$/launcher.py" afterDir="false" />
+    <list default="true" id="01146d41-76b5-4658-b610-8f730d9dddb8" name="Changes" comment="Расскоментировал долгие парсеры">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Parsing/Muztorg/Muztorg parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Muztorg/Muztorg parser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Parsing/Muztorg/muztorg.db" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Muztorg/muztorg.db" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Parsing/Pop-music/Pop-music parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Pop-music/Pop-music parser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Parsing/Pop-music/pop-music.db" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Pop-music/pop-music.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Skifmusic/Skifmusic parser.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Skifmusic/Skifmusic parser.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Parsing/Skifmusic/skifmusic.db" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Skifmusic/skifmusic.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Parsing/Thomann/Thomann parsing.py" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Thomann/Thomann parsing.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Parsing/Thomann/thomann.db" beforeDir="false" afterPath="$PROJECT_DIR$/Parsing/Thomann/thomann.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launcher.py" beforeDir="false" afterPath="$PROJECT_DIR$/launcher.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/normalized_guitars.db" beforeDir="false" afterPath="$PROJECT_DIR$/normalized_guitars.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/normalizer.py" beforeDir="false" afterPath="$PROJECT_DIR$/normalizer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tg_bot.py" beforeDir="false" afterPath="$PROJECT_DIR$/tg_bot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/update.py" beforeDir="false" afterPath="$PROJECT_DIR$/update.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view_db.py" beforeDir="false" afterPath="$PROJECT_DIR$/view_db.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/weekly_update.log" beforeDir="false" afterPath="$PROJECT_DIR$/weekly_update.log" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -103,7 +107,23 @@
       <option name="project" value="LOCAL" />
       <updated>1778924222189</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Добавлен лаунчер, чтобы одновременно было обновление и работал тг бот. Для этого нужно было поменять тг бот, заодно исправил, что он делал 2 раз нормализацию">
+      <option name="closed" value="true" />
+      <created>1779209459282</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1779209459282</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Расскоментировал долгие парсеры">
+      <option name="closed" value="true" />
+      <created>1779209518281</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1779209518281</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -124,6 +144,8 @@
     <MESSAGE value="Первый коммит - создание" />
     <MESSAGE value="Все БД теперь в одной нормализованной" />
     <MESSAGE value="Парсинг по расписанию" />
-    <option name="LAST_COMMIT_MESSAGE" value="Парсинг по расписанию" />
+    <MESSAGE value="Добавлен лаунчер, чтобы одновременно было обновление и работал тг бот. Для этого нужно было поменять тг бот, заодно исправил, что он делал 2 раз нормализацию" />
+    <MESSAGE value="Расскоментировал долгие парсеры" />
+    <option name="LAST_COMMIT_MESSAGE" value="Расскоментировал долгие парсеры" />
   </component>
 </project>

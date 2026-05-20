@@ -20,7 +20,7 @@ class GuitarNormalizer:
             "--"
         }
 
-    # ---------------- CLEAN ----------------
+
 
     def clean_text(self, value):
 
@@ -41,7 +41,7 @@ class GuitarNormalizer:
 
         return value
 
-    # ---------------- PRICE ----------------
+
 
     def clean_price(self, value):
 
@@ -62,7 +62,7 @@ class GuitarNormalizer:
         except:
             return "N/A"
 
-    # ---------------- RATING ----------------
+
 
     def clean_rating(self, value):
 
@@ -79,7 +79,6 @@ class GuitarNormalizer:
         except:
             return "N/A"
 
-    # ---------------- CONDITION ----------------
 
     def normalize_condition(self, value):
 
@@ -103,7 +102,7 @@ class GuitarNormalizer:
 
         return "Новая"
 
-    # ---------------- COLUMN NORMALIZATION ----------------
+
 
     def normalize_columns(self, df: pd.DataFrame):
 
@@ -135,7 +134,7 @@ class GuitarNormalizer:
 
         return df
 
-    # ---------------- REQUIRED COLUMNS ----------------
+
 
     def ensure_columns(self, df: pd.DataFrame):
 

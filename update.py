@@ -12,7 +12,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from main import main as normalize_pipeline
 
 
-# ---------------- CONFIG ----------------
+
 
 PARSERS_DIR = Path("Parsing")
 
@@ -23,7 +23,6 @@ DB_TABLE = "guitars"
 LOG_FILE = "weekly_update.log"
 
 
-# ---------------- LOGGING ----------------
 
 logging.basicConfig(
     level=logging.INFO,
@@ -37,7 +36,6 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 
-# ---------------- FIND PARSERS ----------------
 
 def find_parser_scripts():
 
@@ -60,17 +58,8 @@ def find_parser_scripts():
     return parser_files
 
 
-# ---------------- DATABASE PATH ----------------
 
 def get_database_path(parser_path: Path):
-
-    """
-    Для:
-    Parsing/Thomann/parser.py
-
-    вернет:
-    Parsing/Thomann/thomann.db
-    """
 
     folder_name = parser_path.parent.name.lower()
 
@@ -79,7 +68,6 @@ def get_database_path(parser_path: Path):
     return parser_path.parent / db_name
 
 
-# ---------------- CLEAR DATABASE ----------------
 
 def clear_database(db_path: Path):
 
@@ -111,7 +99,6 @@ def clear_database(db_path: Path):
         )
 
 
-# ---------------- RUN PARSERS ----------------
 
 def run_parsers():
 
@@ -135,14 +122,12 @@ def run_parsers():
 
             db_path = get_database_path(parser)
 
-            # Удаляем старую БД магазина
             clear_database(db_path)
 
             logger.info(
                 f"[RUNNING] {parser.name}"
             )
 
-            # Передаем путь БД в parser
             result = subprocess.run(
                 [
                     sys.executable,
@@ -182,7 +167,6 @@ def run_parsers():
             )
 
 
-# ---------------- CLEAR NORMALIZED DB ----------------
 
 def clear_normalized_db():
 
@@ -214,7 +198,6 @@ def clear_normalized_db():
             )
 
 
-# ---------------- UPDATE PIPELINE ----------------
 
 def update_pipeline():
 
@@ -277,7 +260,6 @@ def update_pipeline():
     )
 
 
-# ---------------- SCHEDULER ----------------
 
 def start_scheduler():
 
@@ -312,7 +294,6 @@ def start_scheduler():
         )
 
 
-# ---------------- MAIN ----------------
 
 if __name__ == "__main__":
 

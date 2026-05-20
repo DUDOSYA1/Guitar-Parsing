@@ -32,7 +32,6 @@ def load_data():
 
         conn.close()
 
-        # преобразуем числовые поля
         new_df["Цена"] = pd.to_numeric(
             new_df["Цена"],
             errors="coerce"
@@ -43,20 +42,18 @@ def load_data():
             errors="coerce"
         )
 
-        # обновляем только при успехе
         df = new_df
 
         print(
-            f"✅ Загружено {len(df)} записей"
+            f"Загружено {len(df)} записей"
         )
 
     except Exception as e:
 
         print(
-            f"❌ Ошибка загрузки: {e}"
+            f"Ошибка загрузки: {e}"
         )
 
-        # не уничтожаем старый df
 
 
 async def start(
@@ -440,7 +437,7 @@ def main():
         )
     )
 
-    print("🎸 Бот запущен")
+    print("Бот запущен")
 
     app.run_polling()
 

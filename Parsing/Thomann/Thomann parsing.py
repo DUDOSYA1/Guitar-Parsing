@@ -14,9 +14,6 @@ from fake_useragent import UserAgent
 from pathlib import Path
 
 
-# ------------------------------------------------
-# DB PATH
-# ------------------------------------------------
 
 if len(sys.argv) < 2:
     raise Exception(
@@ -27,7 +24,6 @@ db_path = Path(sys.argv[1]).resolve()
 
 print(f"[DB PATH] {db_path}")
 
-# Создаем папку если нет
 db_path.parent.mkdir(
     parents=True,
     exist_ok=True
@@ -57,9 +53,7 @@ def init_db():
 def get_driver():
     ua = UserAgent()
     options = Options()
-    # options.add_argument("--headless") # Раскомментируйте для работы в фоновом режиме
     options.add_argument(f"user-agent={ua.random}")
-    # Укажите путь к вашему chromedriver, если он не в PATH
     driver = webdriver.Chrome(options=options)
     return driver
 

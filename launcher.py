@@ -19,7 +19,7 @@ def start(script):
     processes.append(process)
 
     print(
-        f"✅ Запущен: {script}"
+        f"Запущен: {script}"
     )
 
     return process
@@ -57,25 +57,22 @@ if __name__ == "__main__":
 
     try:
 
-        # запуск обновления
         start("update.py")
 
-        # запуск бота
         start("tg_bot.py")
 
         print(
-            "\n🚀 Все сервисы запущены"
+            "\nВсе сервисы запущены"
         )
 
         while True:
 
             for process in processes:
 
-                # если процесс умер
                 if process.poll() is not None:
 
                     print(
-                        f"❌ Процесс завершился "
+                        f"Процесс завершился "
                         f"(код {process.returncode})"
                     )
 
