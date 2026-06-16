@@ -104,6 +104,29 @@ class GuitarNormalizer:
 
 
 
+    def detect_currency(self, site_value):
+
+        if site_value == "N/A":
+            return "N/A"
+
+        site_lower = site_value.lower()
+
+        if "thomann" in site_lower:
+            return "EUR"
+
+        if "sweetwater" in site_lower:
+            return "USD"
+
+        if any(s in site_lower for s in [
+            "skifmusic",
+            "pop-music",
+            "muztorg"
+        ]):
+            return "RUB"
+
+        return "N/A"
+
+
     def normalize_columns(self, df: pd.DataFrame):
 
         column_mapping = {
@@ -144,6 +167,7 @@ class GuitarNormalizer:
             "Страна производства",
             "Состояние",
             "Цена",
+            "Валюта",
             "Рейтинг",
             "Сайт",
             "Ссылка",
@@ -192,6 +216,10 @@ class GuitarNormalizer:
         df["Сайт"] = df[
             "Сайт"
         ].apply(self.clean_text)
+
+        df["Валюта"] = df[
+            "Сайт"
+        ].apply(self.detect_currency)
 
         df["Ссылка"] = df[
             "Ссылка"

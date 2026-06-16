@@ -552,3 +552,41 @@ FileNotFoundError: No databases found inside Parsing/
 2026-05-21 17:58:16,845 | INFO | Finished in: 0:04:44.163744
 2026-05-21 17:58:16,845 | INFO | ==========================
 2026-05-21 17:58:16,845 | INFO | Job "update_pipeline (trigger: interval[7 days, 0:00:00], next run at: 2026-05-28 17:53:32 +05)" executed successfully
+2026-05-29 21:03:05,834 | INFO | Adding job tentatively -- it will be properly scheduled when the scheduler starts
+2026-05-29 21:03:05,835 | INFO | Scheduler started
+2026-05-29 21:03:05,835 | INFO | Update interval: 1 week
+2026-05-29 21:03:05,835 | INFO | Added job "update_pipeline" to job store "default"
+2026-05-29 21:03:05,836 | INFO | Scheduler started
+2026-05-29 21:03:05,836 | INFO | Running job "update_pipeline (trigger: interval[7 days, 0:00:00], next run at: 2026-05-29 21:03:05 +05)" (scheduled at 2026-05-29 21:03:05.830684+05:00)
+2026-05-29 21:03:05,837 | INFO | ==========================
+2026-05-29 21:03:05,837 | INFO | STARTING WEEKLY UPDATE
+2026-05-29 21:03:05,837 | INFO | ==========================
+2026-05-29 21:03:05,837 | INFO | STEP 1: Clearing normalized DB
+2026-05-29 21:03:05,895 | INFO | [REMOVED] normalized_guitars.db
+2026-05-29 21:03:05,895 | INFO | STEP 2: Running parsers
+2026-05-29 21:03:05,900 | INFO | Found 5 parsers
+2026-05-29 21:03:05,986 | INFO | [CLEARED] Parsing\Muztorg\muztorg.db
+2026-05-29 21:03:05,986 | INFO | [RUNNING] Muztorg parser.py
+2026-05-29 21:03:50,484 | INFO | [SUCCESS] Muztorg parser.py
+2026-05-29 21:03:50,484 | INFO | [DB SAVED] Parsing\Muztorg\muztorg.db
+2026-05-29 21:03:50,568 | INFO | [CLEARED] Parsing\Pop-music\pop-music.db
+2026-05-29 21:03:50,568 | INFO | [RUNNING] Pop-music parser.py
+2026-05-29 21:07:17,919 | INFO | [SUCCESS] Pop-music parser.py
+2026-05-29 21:07:17,919 | INFO | [DB SAVED] Parsing\Pop-music\pop-music.db
+2026-05-29 21:07:17,989 | INFO | [CLEARED] Parsing\Skifmusic\skifmusic.db
+2026-05-29 21:07:17,990 | INFO | [RUNNING] Skifmusic parser.py
+2026-05-29 21:07:27,292 | INFO | [SUCCESS] Skifmusic parser.py
+2026-05-29 21:07:27,292 | INFO | [DB SAVED] Parsing\Skifmusic\skifmusic.db
+2026-05-29 21:07:27,374 | INFO | [CLEARED] Parsing\Sweetwater\sweetwater.db
+2026-05-29 21:07:27,374 | INFO | [RUNNING] Sweetwater parser.py
+2026-05-29 21:09:06,948 | INFO | [SUCCESS] Sweetwater parser.py
+2026-05-29 21:09:06,948 | INFO | [DB SAVED] Parsing\Sweetwater\sweetwater.db
+2026-05-29 21:09:07,009 | INFO | [CLEARED] Parsing\Thomann\thomann.db
+2026-05-29 21:09:07,010 | INFO | [RUNNING] Thomann parsing.py
+2026-05-29 21:09:25,536 | INFO | [SUCCESS] Thomann parsing.py
+2026-05-29 21:09:25,537 | INFO | [DB SAVED] Parsing\Thomann\thomann.db
+2026-05-29 21:09:25,537 | INFO | STEP 3: Running normalization
+2026-05-29 21:09:25,834 | INFO | [SUCCESS] Normalized DB updated
+2026-05-29 21:09:25,834 | INFO | Finished in: 0:06:19.996769
+2026-05-29 21:09:25,834 | INFO | ==========================
+2026-05-29 21:09:25,834 | INFO | Job "update_pipeline (trigger: interval[7 days, 0:00:00], next run at: 2026-06-05 21:03:05 +05)" executed successfully

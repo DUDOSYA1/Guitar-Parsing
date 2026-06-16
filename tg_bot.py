@@ -12,6 +12,17 @@ from io import StringIO, BytesIO
 
 TOKEN = "8744455253:AAGQyKEYka_jTo3Kmnvf-9np9E5HzWMAiLo"
 
+RATES = {"USD": 73, "EUR": 84, "RUB": 1}
+
+
+def price_in_rub(row):
+    price = row["Цена"]
+    if pd.isna(price):
+        return float("nan")
+    currency = row.get("Валюта", "RUB")
+    rate = RATES.get(str(currency).upper(), 1)
+    return float(price) * rate
+
 df = pd.DataFrame()
 
 
@@ -153,6 +164,7 @@ async def search(
         "Модель",
         "Производитель",
         "Цена",
+        "Валюта",
         "Рейтинг",
         "Сайт"
     ])
@@ -164,6 +176,7 @@ async def search(
             row["Модель гитары"],
             row["Производитель"],
             row["Цена"],
+            row.get("Валюта", "N/A"),
             row["Рейтинг"],
             row["Ссылка"]
 
@@ -203,10 +216,14 @@ async def top_price(
     )
 
     sorted_df = (
-        df.sort_values(
-            "Цена",
+        df.assign(
+            _price_rub=df.apply(price_in_rub, axis=1)
+        )
+        .sort_values(
+            "_price_rub",
             ascending=not order_desc
         )
+        .drop(columns=["_price_rub"])
         .head(10)
     )
 
@@ -229,12 +246,23 @@ async def top_price(
             else "-"
         )
 
+        currency = row.get("Валюта", "RUB")
+        symbols = {"USD": "$", "EUR": "€", "RUB": "₽"}
+        symbol = symbols.get(str(currency).upper(), "₽")
+        rub = price_in_rub(row)
+        rub_str = (
+            f" (~{rub:,.0f} ₽)"
+            if str(currency).upper() != "RUB"
+            else ""
+        )
+
         message += (
 
             f"{i+1}. "
             f"{row['Производитель']} "
             f"{row['Модель гитары']}\n"
-            f"💰 {row['Цена']:,.0f} ₽ "
+            f"💰 {row['Цена']:,.0f} {symbol}"
+            f"{rub_str} "
             f"⭐ {rating}\n\n"
         )
 
